@@ -119,14 +119,14 @@ def ind_euler(N, verbose):
 # Fast exponentiation
 #
 def fast_exp(m, e, n, verbose):
-	c , e_sv = 1 , e
+	c , e_sv , m_tmp = 1 , e, m
 	while(e>0):
 		if(e % 2 == 0):
 			e//=2
 		else:
-			c = (c * m) % n
+			c = (c * m_tmp) % n
 			e = (e - 1)//2
-		m = (m * m) % n
+		m_tmp = (m_tmp * m_tmp) % n
 	if(verbose != 0):
 		print(str(m) + " ^ " + str(e_sv) + " % " + str(n) + " = " + str(c))
 	return c
@@ -243,20 +243,31 @@ def int_list(a, b):
 #
 def baby_giant_step(p, g, verbose):
 	m = math.ceil(math.sqrt(p))
-	g_t = h_t = [0]*m
+	g_t = [0]*m
+	h_t = [0]*m
+	g_inv = 0
 	for i in range(0, m):
-		g_t[i] = fast_exp(m, i, p, verbose)
-	# g^(-m) mod p = g^(-1)^6 mod p :
-	g_inv = fast_exp(mod_inv(g, p, verbose), m, p, verbose)
+		g_t[i] = fast_exp(g, i, p, verbose) % p
+	if(verbose != 0):
+		print("g ={0}".format(g_t))
+	# g^(-m) mod p = (g ^ (-1)) ^ 6 mod p :
+	g_inv_m = fast_exp(mod_inv(g, p, verbose), m, p, verbose)
+	if(verbose != 0):
+		print("g ^ (-m) mod p = {0}^(-{1}) mod {2} = {3}".format(g, m, p, g_inv_m))
 	j = ret = cont = 0
 	while(j < m and cont == 0):
-		h_t[i] = fast_exp(g_inv[i], i, p, verbose)
-		if(h_t[i] in g_t):
-			ret = i * m + g_t.index(h_t[i]) # NON OPIMISE
+		h_t[j] = m * fast_exp(g_inv_m, j, p, verbose) % p
+		if(verbose != 0):
+			print("h[{0}] = {1}".format(j, h_t[j]))
+			print("h is {0} and g is {1}".format(h_t, g_t))
+		if(h_t[j] in g_t):
+			ret = j * m + g_t.index(h_t[j]) # NON OPIMISE
+			if(verbose != 0):
+				print("Found it in g_t[{0}] which is {1} ".format(g_t.index(h_t[j]), h_t[j]))
 			cont = 1
-		else:
-			j = j+1
+		j = j+1
 	return ret
+
 
 
 ## ----------------------------
