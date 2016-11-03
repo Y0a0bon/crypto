@@ -35,19 +35,8 @@ def e_rsa(m, e, p, q, verbose):
     if(verbose!=0):
         print('Message is now '+str(c))
     return c
-# m = "HELLO" in ASCII
-# m = 7269767679
-# Blocks have to be sliced in size not equal or greater than the number that compose n (1073 : 4 numbers)
-# Answer should be 436
-#print("Should be 436 : ")
-#e_rsa(726, 71, 29, 37, 1)
 
-print("Big numbers woohoo :")
-m = 1254894561
-print("m is "+str(m)+" and c is :")
-c = e_rsa(m, e, p, q, 1)
-print(c)
-
+## changed
 
 #
 # Decode RSA
@@ -62,8 +51,9 @@ def d_rsa(c, d, n, verbose):
 # Answer should be 726
 # print("Should be 726 : ")
 # d_rsa(436 ,1079, 1073, 1)
-print("c is "+str(c)+" and m should be "+str(m))
-print(d_rsa(c, d, n, 1))
+
+# print("c is "+str(c)+" and m should be "+str(m))
+# print(d_rsa(c, d, n, 1))
 
 
 #
@@ -91,8 +81,18 @@ def rsa_crt(c, d, p, q, verbose):
 # Should return 513
 #rsa_crt(8363, 11787, 137, 131, 1)
 # Error :
-print("c is "+str(c)+" and m should be "+str(m))
-print(rsa_crt(c, d, p, q, 1))
+# print("c is "+str(c)+" and m should be "+str(m))
+# print(rsa_crt(c, d, p, q, 1))
+
+
+#
+# Test function for rsa.py
+#
+def test_rsa():
+    if(e_rsa(1254894561, 547, 70457971, 9891923, 0) == 467534266279873):
+        print("Test de e_rsa(m, e, p, q, verbose) ...\t\tOK")
+    else:
+        print("Test de e_rsa(m, e, p, q, verbose) ...\t\tFAILED")
 
 
 #
