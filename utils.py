@@ -3,6 +3,7 @@
 ############################
 
 # Contains the following functions :
+# test_utils()
 # euclide(a, b, verbose)
 # calcpgcd(a, b, verbose)
 # mod_inv(b, n, verbose)
@@ -11,16 +12,58 @@
 # phi(p, q)
 # rabin_miller(n)
 # is_prime(n)
-# test_utils()
 # iroot(k, n)
-# eratho(a, b, ch)
 # int_list(a, b)
 # baby_giant_step(p, g, verbose)
-# rec_eratho(x)
+# pollard_rho(n, x1, f, verbose)
+# pollard_rho_lambda(x)
+
 
 
 import os, sys
 import math, random
+
+
+#
+# Test function for utils.py
+#
+def test_utils():
+	print("********************************************************************"
+              "\n Test of functions in utils.py:\n\n")
+	if(euclide(141, 255, 0) == [38, -21, 3]):
+		print(" Test of euclide(a, b, verbose) ...\t\t\t\tOK")
+	else:
+		print(" Test of euclide(a, b, verbose) ...\t\t\t\tFAILED")
+	if(calcpgcd(45,89, 0) == 1 and calcpgcd(78, 1547, 0) == 13):
+		print(" Test of calcpgcd(a, b, verbose) ...\t\t\t\tOK")
+	else:
+		print(" Test of calcpgcd(a, b, verbose) ...\t\t\t\tFAILED")
+	if(mod_inv(547, 696964823868233, 0) == 44595555457748):		  
+		print(" Test of mod_inv(b, n verbose) ...\t\t\t\tOK")
+	else:
+		print(" Test of mod_inv(b, n, verbose) ...\t\t\t\tFAILED")
+	if(fast_exp(1254894561, 44595555457748, 696964823868233, 0) == 269024829525699 and fast_exp(11, 13, 19, 0) == pow(11, 13)%19):
+		print(" Test of fast_exp(m, e, n, verbose) ...\t\t\t\tOK")
+	else:
+		print(" Test of fast_exp(m, e, n, verbose) ...\t\t\t\tFAILED")
+	if(phi(70457971, 9891923) == 696964743518340):
+		print(" Test of phi(p, q) ...\t\t\t\t\t\tOK")
+	else:
+		print(" Test of phi(p, q) ...\t\t\t\tFAILED")
+	if(is_prime(999982) == False and is_prime(999979)== True and is_prime(516484451321516846844515313513848486461351351468498435159) == True):
+		print(" Test of is_prime(n) ...\t\t\t\t\tOK")
+	else:
+		print(" Test of is_prime(n) ...\t\t\t\t\tFAILED")
+	if(baby_giant_step(31, 3, 0) == 25):
+		print(" Test of baby_giant_step(p, g, verbose) ...\t\t\tOK")
+	else:
+		print(" Test of baby_giant_step(p, g, verbose) ...\t\t\tFAILED")
+	if(pollard_rho(15770708441, 1, pollard_rho_lambda, 0) == 135979):
+		print(" Test of pollard_rho(n, x1, f, verbose) ...\t\t\tOK")
+	else:
+		print(" Test of pollard_rho(n, x1, f, verbose) ...\t\t\tFAILED")
+	print("\n\n End of tests\n"
+              "********************************************************************")
 
 
 #
@@ -192,32 +235,6 @@ def is_prime(n):
 
 
 #
-# Test function for utils.py
-#
-def test_utils():
-	if(calcpgcd(45,89, 0) == 1 and calcpgcd(78, 1547, 0) == 13):
-		print("Test de calcpgcd(a, b, verbose) ...\t\tOK")
-	else:
-		print("Test de calcpgcd(a, b, verbose) ...\t\tFAILED")
-	if(mod_inv(547, 696964823868233, 0) == 44595555457748):		  
-		print("Test de mod_inv(b, n verbose) ...\t\tOK")
-	else:
-		print("Test de mod_inv(b, n, verbose) ...\t\tFAILED")
-	if(fast_exp(1254894561, 44595555457748, 696964823868233, 0) == 269024829525699 and fast_exp(11, 13, 19, 0) == pow(11, 13)%19):
-		print("Test de fast_exp(m, e, n, verbose) ...\t\tOK")
-	else:
-		print("Test de fast_exp(m, e, n, verbose) ...\t\tFAILED")
-	if(phi(70457971, 9891923) == 696964743518340):
-		print("Test de phi(p, q) ...\t\t\t\tOK")
-	else:
-		print("Test de phi(p, q) ...\t\t\t\tFAILED")
-	if(is_prime(999982) == False and is_prime(999979)== True and is_prime(516484451321516846844515313513848486461351351468498435159) == True):
-		print("Test de is_prime(n) ...\t\t\t\tOK")
-	else:
-		print("Test de is_prime(n) ...\t\t\t\tFAILED")
-
-
-#
 # Compute k nth root
 #
 def iroot(k, n):
@@ -269,73 +286,25 @@ def baby_giant_step(p, g, verbose):
 	return ret
 
 
-
-## ----------------------------
-##      NOT TO BE USED
-## ----------------------------
+#
+# Pollard's Rho algorithm
+#
+def pollard_rho(n, x1, f, verbose):
+        x = x1
+        y = f(x) % n
+        p = calcpgcd(y-x, n, verbose)
+        while p == 1:
+                x = f(x) % n
+                y = f(f(y)) % n
+                p = calcpgcd(y-x, n,verbose)
+        if p == n:
+                if(verbose != 0):
+                        print("No solution found !")
+                return None
+        return p
 
 #
-# List all prime numbers under n if 0, else the greatest
+#Function to use in Pollard's Rho algorithm
 #
-##def primes(n, ch): 
-##	if n==2: return [2]
-##	elif n<2: return []
-##
-##	s=list(range(3,n+1,2))
-##	mroot = n ** 0.5
-##	half=(n+1)/2-1
-##	i=0
-##	m=3
-##	while(m <= mroot):
-##	    if s[i]:
-##		j=int((m*m-3)/2)
-##		s[j]=0
-##		while(j<half):
-##		    s[j]=0
-##		    j+=m
-##		i=i+1
-##		m=2*i+3
-##	pr = [2]+[x for x in s if x]
-##	if(ch==0):
-##		return pr
-##	else :
-##		return pr[-1]
-
-
-#
-# Apply the Sieve of Eratosthenes
-# Find prime numbers between a and b (1 is forbidden)
-# 0 for list, else return the greatest one
-# Less effective than primes()
-#
-def eratho(a, b, ch):
-	if(ch==0):
-		return rec_eratho(int_list(a,b))
-	else:
-		return rec_eratho(int_list(a,b))[-1] # wtf?
-
-# print(primes(100000, 1))
-# print(eratho(2, 100000, 1))
-
-
-# print(int_list(1,100))
-
-
-#
-# Recursive function of the Sieve of Eratosthenes
-#
-def rec_eratho(x):
-	if(x[0]*x[0] > x[-1]):
-		return x
-	else:
-		l=[]
-		for i,elt in enumerate(x):
-			if(elt%x[0] != 0):
-				l = l + [elt]
-		return [x[0]] + rec_eratho(l)
-
-# print("Crible d'Erathostene : {}".format(rec_eratho(int_list(2,100))))
-
-
-
-		
+def pollard_rho_lambda(x):
+        return x**2+1
