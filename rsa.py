@@ -7,26 +7,66 @@ import math
 import utils
 
 
-p = 70457971
-q = 9891923
-# n = p * q = 696964823868233
-n = 696964823868233
-e = 547
-# d = e^-1 mod phi(n)
-#   = e^-1 mod phi(p, q)
-#   = 44595555457748 mod 696964743518340
-d = 269024829525699
 #
-# (e,n) = (547,696964823868233)
-# (d,n = (2.32972487969e+14,696964823868233)
-c = 0
+# Test function for rsa.py
+#
+def test_rsa():
+    if(e_rsa(1254894561, 547, 696964823868233, 0) == 467534266279873):
+        # p = 70457971 and q = 9891923 and n = 696964823868233
+        print("Test de e_rsa(m, e, n, verbose) ...\t\tOK")
+    else:
+        print("Test de e_rsa(m, e, n, verbose) ...\t\tFAILED")
+    if(d_rsa(436 ,1079, 1073, 0) == 726):
+        print("Test de d_rsa(c, d, n, verbose) ...\t\tOK")
+    else:
+        print("Test de d_rsa(c, d, n, verbose) ...\t\tFAILED")
+
+#
+# RSA key
+#
+class RSA_key:
+    """ RSA_key class
+    """
+
+    def __init__(self, p, q, e, d):
+        """ Constructor """
+        self.p = p
+        self.q= q
+        self.e =e
+        self._d= d
+        self.n = p *q
+
+    """ Methods """
+    def get_n(self):
+        return self.n
+
+    def get_e(self):
+        return self.e
+
+    def _get_d(self):
+        return self._d
+
+    d = property(_get_d)
+
+    def encrypt_message(self, m, verbose):
+        """ Apply RSA to m """
+        return e_rsa(m, self.e, self.n, verbose)
+
+    def decrypt_message(self, c, verbose):
+        """ Apply RSA to c """
+        return d_rsa(c, self.d, self.n, verbose)
+
+    def __del__(self):
+        print("RSA key deleted")
+
+    
 
 
 #
 # Apply RSA
 #
-def e_rsa(m, e, p, q, verbose):
-    n = p*q
+# A CHANGER, P ET Q SONT EXPLICITES ICI
+def e_rsa(m, e, n, verbose):
     if(utils.calcpgcd(n, e, 0)!=1):
         print(str(e)+" and "+str(n)+"should not have common factors.")
         return 0
@@ -36,24 +76,16 @@ def e_rsa(m, e, p, q, verbose):
         print('Message is now '+str(c))
     return c
 
-## changed
 
 #
 # Decode RSA
 #
 def d_rsa(c, d, n, verbose):
-    #m = pow(c, d)%n
-    m = utils.fast_exp(c, d, n, verbose)
-    if(verbose!=0):
-        print('Message was '+str(m))
-    return m
-
-# Answer should be 726
-# print("Should be 726 : ")
-# d_rsa(436 ,1079, 1073, 1)
-
-# print("c is "+str(c)+" and m should be "+str(m))
-# print(d_rsa(c, d, n, 1))
+	#m = pow(c, d) % n
+	m = utils.fast_exp(c, d, n, verbose)
+	if(verbose!=0):
+		print('Message was '+str(m))
+	return m
 
 
 #
@@ -83,16 +115,6 @@ def rsa_crt(c, d, p, q, verbose):
 # Error :
 # print("c is "+str(c)+" and m should be "+str(m))
 # print(rsa_crt(c, d, p, q, 1))
-
-
-#
-# Test function for rsa.py
-#
-def test_rsa():
-    if(e_rsa(1254894561, 547, 70457971, 9891923, 0) == 467534266279873):
-        print("Test de e_rsa(m, e, p, q, verbose) ...\t\tOK")
-    else:
-        print("Test de e_rsa(m, e, p, q, verbose) ...\t\tFAILED")
 
 
 #
@@ -135,9 +157,8 @@ def broadcast_attack(m, e, n, verbose):
     random.seed
     for i in range(1,e):
         m_tmp = gen_prime(n)
-        c[i] = e_rsa(m, e, gen_prime(n))
+        c[i] = e_rsa(m, e, gen_prime(n), verbose)
         M = M * m_tmp
     m_r = 0
     if(verbose != 0):
         a=0
-

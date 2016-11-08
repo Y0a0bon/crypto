@@ -183,7 +183,7 @@ def phi(p, q):
 
 
 #
-# Compute prime with Rabin-Miller algorithm
+# Compute prime with Rabin-Miller primality test
 #
 def rabin_miller(n):
 		# Returns True if n is a prime number.
