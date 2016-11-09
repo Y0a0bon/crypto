@@ -20,6 +20,11 @@ def test_rsa():
         print("Test de d_rsa(c, d, n, verbose) ...\t\tOK")
     else:
         print("Test de d_rsa(c, d, n, verbose) ...\t\tFAILED")
+    if(rsa_crt(8363, 11787, 137, 131, 0) == 513):
+        print("Test de rsa_crt(c, d, p, q, verbose) ...\tOK")
+    else:
+        print("Test de rsa_crt(c, d, p, q, verbose) ...\tFAILED")
+
 
 #
 # RSA key
@@ -65,7 +70,6 @@ class RSA_key:
 #
 # Apply RSA
 #
-# A CHANGER, P ET Q SONT EXPLICITES ICI
 def e_rsa(m, e, n, verbose):
     if(utils.calcpgcd(n, e, 0)!=1):
         print(str(e)+" and "+str(n)+"should not have common factors.")
@@ -109,13 +113,6 @@ def rsa_crt(c, d, p, q, verbose):
         print('Message was '+str(m))
     return m
 
-#print(rsa_crt(436, 1079, 29, 37, 0))
-# Should return 513
-#rsa_crt(8363, 11787, 137, 131, 1)
-# Error :
-# print("c is "+str(c)+" and m should be "+str(m))
-# print(rsa_crt(c, d, p, q, 1))
-
 
 #
 # Bellcore attack on RSA
@@ -150,6 +147,7 @@ def bellcore(c, d, p, p_fault, q, verbose):
 
 #
 # Broadast attack on RSA (m,e,n) e_rsa(m, e, n, verbose)
+# NOT WORKING YET
 #
 def broadcast_attack(m, e, n, verbose):
     c=[]
@@ -162,3 +160,4 @@ def broadcast_attack(m, e, n, verbose):
     m_r = 0
     if(verbose != 0):
         a=0
+
