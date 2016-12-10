@@ -125,11 +125,8 @@ def bellcore(c, d, p, p_fault, q, verbose):
     q_inv = mod_inv(q, p, verbose)
     q_inv_fault = mod_inv(q, p_fault, verbose)
     
-    #m_p = pow(c, d_p) % p
     m_p = utils.fast_exp(c, d_p, p, 0)
-    #m_q = pow(c, d_q) % q
     m_q = utils.fast_exp(c, d_q, q, 0)
-    #m_p_fault = pow(c, d_p_fault) % p_fault
     m_p_fault = utils.fast_exp(c, d_p_fault, p, 0)
     
     h = q_inv * (m_p - m_q) % p

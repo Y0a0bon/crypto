@@ -291,19 +291,19 @@ def baby_giant_step(p, g, verbose):
 def pollard_rho(n, x1, f, verbose):
         x = x1
         y = f(x) % n
-        p = calcpgcd(y-x, n, verbose)
-        while p == 1:
+        p = calcpgcd(y - x, n, verbose)
+        while(p == 1):
                 x = f(x) % n
                 y = f(f(y)) % n
-                p = calcpgcd(y-x, n,verbose)
-        if p == n:
+                p = calcpgcd(y - x, n, verbose)
+        if(p == n):
                 if(verbose != 0):
                         print("No solution found !")
                 return None
         return p
 
 #
-#Function to use in Pollard's Rho algorithm
+# Function to use in Pollard's Rho algorithm
 #
 def pollard_rho_lambda(x):
-        return x**2+1
+        return (x**2 + 1)
