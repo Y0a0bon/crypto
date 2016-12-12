@@ -162,15 +162,18 @@ def ind_euler(N, verbose):
 #
 def fast_exp(m, e, n, verbose):
 	c , e_sv , m_tmp = 1 , e, m
-	while(e>0):
-		if(e % 2 == 0):
-			e//=2
+	while(e_sv>0):
+		if(e_sv % 2 == 0):
+			e_sv//=2
 		else:
 			c = (c * m_tmp) % n
-			e = (e - 1)//2
-		m_tmp = (m_tmp * m_tmp) % n
+			e_sv = (e_sv - 1)//2
+		print("e = " + str(e_sv) + " and m = " + str(m_tmp))
+		m_tmp = (m_tmp * m_tmp)
+		print("m = " + str(m_tmp))
+		m_tmp = m_tmp % n
 	if(verbose != 0):
-		print(str(m) + " ^ " + str(e_sv) + " % " + str(n) + " = " + str(c))
+		print(str(m) + " ^ " + str(e) + " % " + str(n) + " = " + str(c))
 	return c
 
 
