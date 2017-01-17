@@ -74,7 +74,6 @@ def e_rsa(m, e, n, verbose):
     if(utils.calcpgcd(n, e, 0)!=1):
         print(str(e)+" and "+str(n)+"should not have common factors.")
         return 0
-    #c = pow(m, e)%n
     c = utils.fast_exp(m, e, n, verbose)
     if(verbose!=0):
         print('Message is now '+str(c))
@@ -85,11 +84,10 @@ def e_rsa(m, e, n, verbose):
 # Decode RSA
 #
 def d_rsa(c, d, n, verbose):
-	#m = pow(c, d) % n
-	m = utils.fast_exp(c, d, n, verbose)
-	if(verbose!=0):
-		print('Message was '+str(m))
-	return m
+    m = utils.fast_exp(c, d, n, verbose)
+    if(verbose!=0):
+        print('Message was '+str(m))
+    return m
 
 
 #
@@ -102,9 +100,7 @@ def rsa_crt(c, d, p, q, verbose):
     d_q = d % (q-1)
     q_inv = utils.mod_inv(q, p, verbose)
     
-    #m_p = pow(c, d_p) % p
     m_p = utils.fast_exp(c, d_p, p, 0)
-    #m_q = pow(c, d_q) % q
     m_q = utils.fast_exp(c, d_q, q, 0)
     h = q_inv * (m_p - m_q) % p
     m = m_q + h * q
@@ -143,13 +139,24 @@ def bellcore(c, d, p, p_fault, q, verbose):
 
 
 #
+# Broadcast attack on RSA
+# C[] is m message encrypted with the same exponent e and a different modulo n
+#
+def broadcast_attack(C, e, verbose)
+    m = 1
+    for i in range(1,e):
+        m = m * C[i]
+    return utils.iroot(m, e)
+
+
+#
 # Broadast attack on RSA (m,e,n) e_rsa(m, e, n, verbose)
 # NOT WORKING YET
 #
-def broadcast_attack(m, e, n, verbose):
+def broadcast_attack_old(m, e, n, verbose):
     c=[]
     M = 1
-    random.seed
+    random.seed()
     for i in range(1,e):
         m_tmp = gen_prime(n)
         c[i] = e_rsa(m, e, gen_prime(n), verbose)
@@ -157,4 +164,15 @@ def broadcast_attack(m, e, n, verbose):
     m_r = 0
     if(verbose != 0):
         a=0
+
+
+
+
+    
+
+
+
+
+
+        
 

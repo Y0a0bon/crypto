@@ -168,9 +168,9 @@ def fast_exp(m, e, n, verbose):
 		else:
 			c = (c * m_tmp) % n
 			e_sv = (e_sv - 1)//2
-		print("e = " + str(e_sv) + " and m = " + str(m_tmp))
+		#print("e = " + str(e_sv) + " and m = " + str(m_tmp))
 		m_tmp = (m_tmp * m_tmp)
-		print("m = " + str(m_tmp))
+		#print("m = " + str(m_tmp))
 		m_tmp = m_tmp % n
 	if(verbose != 0):
 		print(str(m) + " ^ " + str(e) + " % " + str(n) + " = " + str(c))
@@ -310,3 +310,18 @@ def pollard_rho(n, x1, f, verbose):
 #
 def pollard_rho_lambda(x):
         return (x**2 + 1)
+
+
+#
+# Function to generate a random prime number
+#
+def gen_prime(n_max=3513514684985159):
+        random.seed()
+        mod = 2
+        while(mod == 0 and is_prime(mod) == False):
+                mod = random.randint(100000, n_max)
+                
+        
+        
+
+
