@@ -136,6 +136,7 @@ def mod_inv(b, n, verbose):
 		r = n0 -q * b0
 	if(b0 != 1):
 		print('Pas de solution')
+		return None
 	else:
 		if(verbose != 0):
 			print(str(b)+'^-1 mod '+str(n)+' = '+str(t))
@@ -287,7 +288,36 @@ def baby_giant_step(p, g, verbose):
 		j = j+1
 	return ret
 
+#
+# BSGS gen a, res b, order n
+#
+def BSGS(a, b, n, verbose):
+    m = math.ceil(math.sqrt(n))
+    g_t = [0]*m
+    h_t = [0]*m
+    for i in range(0,m):
+        g_t[i] = fast_exp(a, i, n, verbose)
+    if(verbose != 0):
+        print("g ={0}".format(g_t))
+    # g^(-m) mod n = (g ^ (-1)) ^ m mod n :
+    g_inv_m = fast_exp(mod_inv(a, n, verbose), m, n, verbose)
+    if(verbose != 0):
+        print("g ^ (-m) mod n = {0}^(-{1}) mod {2} = {3}".format(a, m, n, g_inv_m))
+    j = ret = cont = 0
+    while(j < m and cont == 0):
+        h_t[j] = m * fast_exp(g_inv_m, j, n, verbose) % n
+        if(verbose != 0):
+            print("h[{0}] = {1}".format(j, h_t[j]))
+            print("h is {0} and g is {1}".format(h_t, g_t))
+        if(h_t[j] in g_t):
+            ret = j * m + g_t.index(h_t[j]) # NON OPIMISE
+            if(verbose != 0):
+                print("Found it in g_t[{0}] which is {1} ".format(g_t.index(h_t[j]), h_t[j]))
+            cont = 1
+        j = j+1
+    return ret
 
+        
 #
 # Pollard's Rho algorithm
 #
@@ -320,6 +350,36 @@ def gen_prime(n_max=3513514684985159):
         mod = 2
         while(mod == 0 and is_prime(mod) == False):
                 mod = random.randint(100000, n_max)
+
+
+
+#
+# Mod_inv for ECDSA
+#
+def mod_inv_ecdsa(k, p):
+        if k == 0:
+            raise ZeroDivisionError('division by zero')
+        if k < 0:
+            # k ** -1 = p - (-k) ** -1  (mod p)
+            return p - self.mod_inv_ecdsa(-k, p)
+
+        # Extended Euclidean algorithm.
+        s, old_s = 0, 1
+        t, old_t = 1, 0
+        r, old_r = p, k
+
+        while r != 0:
+            quotient = old_r // r
+            old_r, r = r, old_r - quotient * r
+            old_s, s = s, old_s - quotient * s
+            old_t, t = t, old_t - quotient * t
+
+        gcd, x, y = old_r, old_s, old_t
+
+        assert gcd == 1
+        assert (k * x) % p == 1
+
+        return x % p
                 
         
         

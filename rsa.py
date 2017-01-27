@@ -31,6 +31,11 @@ def test_rsa():
 #
 class RSA_key:
     """ RSA_key class
+         p & q prime (numbers distincts)
+         n = p*q
+         phi = phi(p, q)
+         e prime with phi and < phi
+         d = mod_inv(e, phi, 0)
     """
 
     def __init__(self, p, q, e, d):
@@ -142,7 +147,7 @@ def bellcore(c, d, p, p_fault, q, verbose):
 # Broadcast attack on RSA
 # C[] is m message encrypted with the same exponent e and a different modulo n
 #
-def broadcast_attack(C, e, verbose)
+def broadcast_attack(C, e, verbose):
     m = 1
     for i in range(1,e):
         m = m * C[i]
