@@ -382,6 +382,38 @@ def mod_inv_ecdsa(k, p):
         return x % p
                 
         
+#
+# CRT
+#
+def crt(a, moda, b, modb):
+        r = euclide(moda, modb)
+        u = r[0]
+        v = r[1]
+        x =(a*v*modb) + (b*u*moda)
+        return [x, moda*modb]
+
+#
+# multiple crt
+#
+def crt_list(values, mods):
+        lg = len(values)
+        while(len >1):
+                i = 0
+                while((i*2) < length):
+                        if((i*2)+1 == length):
+                                values[i] = values[i*2]
+                                mods[i] = mods[i*2]
+                        else:
+                                res = crt(values[i*2], mods[i*2], values[i*2+1], mods[i*2+1])
+                        i = i+1
+                lg =(lg >> 1) + lg%2
+        return [values[0], mods[0]]
+
+
+
+
         
+
+
 
 

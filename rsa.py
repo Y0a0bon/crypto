@@ -147,11 +147,14 @@ def bellcore(c, d, p, p_fault, q, verbose):
 # Broadcast attack on RSA
 # C[] is m message encrypted with the same exponent e and a different modulo n
 #
-def broadcast_attack(C, e, verbose):
-    m = 1
+def broadcast_attack(C, N, e, verbose):
+    V = []
+    M = []
     for i in range(1,e):
-        m = m * C[i]
-    return utils.iroot(m, e)
+        V.append(C[i])
+        M.append(N[i])
+    c = utils.crt_list(V, M)
+    return utils.iroot(c[0], e)
 
 
 #
