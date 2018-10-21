@@ -262,7 +262,8 @@ def int_list(a, b):
 # Function applying Baby Step Giant Step algorithm
 #
 def baby_giant_step(p, g, verbose):
-	m = math.ceil(math.sqrt(p))
+	m = isqrt(p)+1
+	print(m)
 	g_t = [0]*m
 	h_t = [0]*m
 	g_inv = 0
@@ -292,7 +293,8 @@ def baby_giant_step(p, g, verbose):
 # BSGS gen a, res b, order n
 #
 def BSGS(a, b, n, verbose):
-    m = math.ceil(math.sqrt(n))
+    m = isqrt(n)+1
+    print(m)
     g_t = [0]*m
     h_t = [0]*m
     for i in range(0,m):
@@ -490,8 +492,8 @@ def isqrt(n):
 	if n == 0:
 		return 0
 
-	a = int(log2(n)) + 1 // 2
-	b = int(log2(n)) + 1 % 2
+	a = int(math.log2(n)) + 1 // 2
+	b = int(math.log2(n)) + 1 % 2
 
 	x = 2**(a+b)
 	while True:

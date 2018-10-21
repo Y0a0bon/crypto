@@ -20,7 +20,7 @@ class ECDSA_key:
             print("Error : You have chosen a non prime number for p")
         if(utils.is_prime(n) ==  False):
             print("Error : You have chosen a non prime number for n")
-        if(n<pow(2,160)):
+        if(n<(1<<260)):
             print("Warning : n should be greater than 2^160")
         # Initialize variables #
         self.G = [] # (coordinates (g_x, g_y)) #
